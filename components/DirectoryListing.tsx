@@ -1,11 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { DirectoryEntry } from "@/lib/shared";
-import { getTypeIndicator, formatSize } from "@/lib/shared";
+import { getTypeIndicator } from "@/lib/shared";
 import Breadcrumb from "@/components/Breadcrumb";
 
-type SortColumn = "name" | "date" | "size" | "description";
+function useIsMobile(breakpoint = 600) {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${breakpoint}px)`);
+    setIsMobile(mql.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, [breakpoint]);
+  return isMobile;
+}
+
+type SortColumn = "name" | "date" | "description";
 type SortOrder = "asc" | "desc";
 
 interface DirectoryListingProps {
@@ -14,8 +26,10 @@ interface DirectoryListingProps {
 }
 
 export default function DirectoryListing({ path, entries }: DirectoryListingProps) {
+  const isMobile = useIsMobile();
   const [sortColumn, setSortColumn] = useState<SortColumn>("name");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
+  const colCount = isMobile ? 2 : 4;
 
   function handleSort(column: SortColumn) {
     if (sortColumn === column) {
@@ -38,9 +52,6 @@ export default function DirectoryListing({ path, entries }: DirectoryListingProp
       case "date":
         cmp = a.date.localeCompare(b.date);
         break;
-      case "size":
-        cmp = a.size - b.size;
-        break;
       case "description":
         cmp = a.description.localeCompare(b.description);
         break;
@@ -61,7 +72,7 @@ export default function DirectoryListing({ path, entries }: DirectoryListingProp
       <table>
         <thead>
           <tr>
-            <th></th>
+            {!isMobile && <th></th>}
             <th>
               <a href="#" onClick={(e) => { e.preventDefault(); handleSort("name"); }}>
                 Name{indicator("name")}
@@ -72,39 +83,34 @@ export default function DirectoryListing({ path, entries }: DirectoryListingProp
                 Last modified{indicator("date")}
               </a>
             </th>
-            <th>
-              <a href="#" onClick={(e) => { e.preventDefault(); handleSort("size"); }}>
-                Size{indicator("size")}
-              </a>
-            </th>
-            <th>
-              <a href="#" onClick={(e) => { e.preventDefault(); handleSort("description"); }}>
-                Description{indicator("description")}
-              </a>
-            </th>
+            {!isMobile && (
+              <th>
+                <a href="#" onClick={(e) => { e.preventDefault(); handleSort("description"); }}>
+                  Description{indicator("description")}
+                </a>
+              </th>
+            )}
           </tr>
         </thead>
         <tbody>
-          <tr><td colSpan={5}><hr /></td></tr>
+          <tr><td colSpan={colCount}><hr /></td></tr>
           {parentHref !== null && (
             <tr>
-              <td>[PARENTDIR]</td>
-              <td><a href={parentHref || "/"}>Parent Directory</a></td>
+              {!isMobile && <td>[PARENTDIR]</td>}
+              <td className="name-col"><a href={parentHref || "/"}>Parent Directory</a></td>
               <td></td>
-              <td>-</td>
-              <td></td>
+              {!isMobile && <td></td>}
             </tr>
           )}
           {sorted.map((entry) => (
             <tr key={entry.name}>
-              <td>{getTypeIndicator(entry)}</td>
-              <td><a href={entry.href}>{entry.name}</a></td>
+              {!isMobile && <td>{getTypeIndicator(entry)}</td>}
+              <td className="name-col"><a href={entry.href}>{entry.name}</a></td>
               <td>{entry.date}</td>
-              <td className="size-col">{entry.isDirectory ? "-" : formatSize(entry.size)}</td>
-              <td>{entry.description}</td>
+              {!isMobile && <td>{entry.description}</td>}
             </tr>
           ))}
-          <tr><td colSpan={5}><hr /></td></tr>
+          <tr><td colSpan={colCount}><hr /></td></tr>
         </tbody>
       </table>
       <address>Apache/2.4.54 (Unix) OpenSSL/1.1.1t Server at josephawallace.com Port 443</address>
