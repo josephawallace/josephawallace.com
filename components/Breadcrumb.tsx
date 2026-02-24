@@ -16,13 +16,9 @@ export default function Breadcrumb({ path }: BreadcrumbProps) {
         const isLast = i === segments.length - 1;
         const href = "/" + segments.slice(0, i + 1).join("/");
 
-        if (isLast) {
-          return <span key={i}>{segment}{path.endsWith("/") ? "/" : ""}</span>;
-        }
-
         return (
           <span key={i}>
-            <Link href={href}>{segment}</Link>/
+            <Link href={href}>{segment}</Link>{isLast && !path.endsWith("/") ? "" : "/"}
           </span>
         );
       })}
