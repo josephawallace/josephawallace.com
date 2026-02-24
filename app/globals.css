@@ -30,11 +30,32 @@ a:hover {
 
 /* Directory listing */
 
-.directory-listing h1 {
+/* Breadcrumb nav */
+
+.breadcrumb {
   font-size: 1.5em;
   font-weight: bold;
   margin-bottom: 0.5em;
   font-family: monospace;
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+.breadcrumb a {
+  color: #0000ee;
+  text-decoration: underline;
+}
+
+.breadcrumb a:visited {
+  color: #551a8b;
+}
+
+@media (max-width: 600px) {
+  .breadcrumb {
+    font-size: 1.1em;
+    padding-bottom: 4px;
+  }
 }
 
 .directory-listing table {

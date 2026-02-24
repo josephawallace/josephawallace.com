@@ -28,7 +28,7 @@ export default async function CatchAllPage({ params }: PageProps) {
     const parentSegments = path.slice(0, -1);
     const parentPath = parentSegments.length === 0 ? "/" : "/" + parentSegments.join("/");
 
-    return <PostView post={post} parentPath={parentPath} />;
+    return <PostView post={post} path={`/${contentPath}`} parentPath={parentPath} />;
   }
 
   notFound();

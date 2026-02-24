@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { DirectoryEntry } from "@/lib/shared";
 import { getTypeIndicator, formatSize } from "@/lib/shared";
+import Breadcrumb from "@/components/Breadcrumb";
 
 type SortColumn = "name" | "date" | "size" | "description";
 type SortOrder = "asc" | "desc";
@@ -52,12 +53,11 @@ export default function DirectoryListing({ path, entries }: DirectoryListingProp
     return sortOrder === "asc" ? " ▲" : " ▼";
   };
 
-  const displayPath = path === "/" ? "/josephawallace.com/" : `/josephawallace.com${path}`;
   const parentHref = path === "/" ? null : "/" + path.split("/").filter(Boolean).slice(0, -1).join("/");
 
   return (
     <div className="directory-listing">
-      <h1>Index of {displayPath}</h1>
+      <Breadcrumb path={path} />
       <table>
         <thead>
           <tr>
