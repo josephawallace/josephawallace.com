@@ -1,5 +1,5 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
-import type { PostData } from "@/lib/content";
+import type { PostData } from "@/lib/shared";
 
 interface PostViewProps {
   post: PostData;
@@ -13,7 +13,6 @@ export default function PostView({ post, parentPath }: PostViewProps) {
         <a href={parentPath}>Parent Directory</a>
       </div>
       <article className="post-content">
-        <h1>{post.title}</h1>
         {post.date && <p className="post-date">{post.date}</p>}
         <MDXRemote source={post.content} />
       </article>

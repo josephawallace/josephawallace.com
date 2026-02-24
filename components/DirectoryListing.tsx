@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import type { DirectoryEntry } from "@/lib/content";
-import { getTypeIndicator, formatSize } from "@/lib/content";
+import type { DirectoryEntry } from "@/lib/shared";
+import { getTypeIndicator, formatSize } from "@/lib/shared";
 
 type SortColumn = "name" | "date" | "size" | "description";
 type SortOrder = "asc" | "desc";
