@@ -63,8 +63,9 @@ a:hover {
   vertical-align: top;
 }
 
-.directory-listing td.size-col {
-  text-align: right;
+.directory-listing .name-col {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .directory-listing hr {
